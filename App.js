@@ -24,8 +24,6 @@ export default function App() {
     });
   }, [user]);
 
-  console.log("user", user);
-
   if (loading) return <Loader />;
 
   return (

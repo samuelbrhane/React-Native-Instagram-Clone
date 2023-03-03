@@ -2,9 +2,10 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 import { Loader } from "../components";
 import { styles } from "../styles/authStyle";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,19 +18,29 @@ const RegisterScreen = ({ navigation }) => {
   });
 
   // Register User
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
     const { name, email, password } = inputData;
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
+
+        // Add user name to user display name
         updateProfile(auth.currentUser, {
           displayName: name,
         });
         const user = userCredential.user;
-        setLoading(false);
-        navigation.navigate("Home");
+
+        // Save user data to Firestore database
+        await setDoc(doc(db, "users", user?.uid), {
+          name,
+          email,
+          timestamp: serverTimestamp(),
+        }).then(() => {
+          setLoading(false);
+          navigation.navigate("Home");
+        });
       })
       .catch((error) => {
         setErrorMessage(
