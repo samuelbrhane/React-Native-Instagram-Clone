@@ -5,19 +5,57 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { Loader } from "../components";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [inputData, setInputData] = useState({
     name: "",
     email: "",
     password: "",
   });
+
+  // Register User
   const handleRegister = (e) => {
     e.preventDefault();
+    setLoading(true);
+    const { name, email, password } = inputData;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+        const user = userCredential.user;
+        setLoading(false);
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        setErrorMessage(
+          error.message
+            .replace("Firebase: Error (", "")
+            .replace(")", "")
+            .replace("auth/", "")
+            .slice(0, 30)
+        );
+        setLoading(false);
+      });
   };
+
+  // set error message to null after 5s
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  }, [errorMessage]);
+
+  if (loading) return <Loader />;
 
   return (
     <View style={styles.container}>
@@ -70,6 +108,12 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
+        {/* error message */}
+        {errorMessage && (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        )}
+
+        {/* register */}
         <TouchableOpacity onPress={handleRegister}>
           <Text style={styles.register}>Register</Text>
         </TouchableOpacity>
@@ -129,13 +173,21 @@ const styles = StyleSheet.create({
     top: "50%",
     transform: [{ translateY: "-50%" }],
   },
+  errorMessage: {
+    borderRadius: 5,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+    backgroundColor: "#AD6A7A38",
+  },
   register: {
     fontSize: 20,
     paddingVertical: 10,
     textAlign: "center",
     color: "white",
     fontWeight: "semibold",
-    marginVertical: 10,
+    marginVertical: 5,
     borderWidth: 2,
     borderColor: "white",
   },

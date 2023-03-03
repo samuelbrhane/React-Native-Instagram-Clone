@@ -5,19 +5,55 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
+import { Loader } from "../components";
+import { auth } from "../firebase/config";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
   });
 
-  const handleRegister = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
+    const { email, password } = inputData;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        navigation.navigate("Home");
+
+        // ...
+        setLoading(false);
+      })
+      .catch((error) => {
+        setErrorMessage(
+          error.message
+            .replace("Firebase: Error (", "")
+            .replace(")", "")
+            .replace("auth/", "")
+            .slice(0, 30)
+        );
+        setLoading(false);
+      });
   };
+
+  // set error message to null after 5s
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
+  }, [errorMessage]);
+
+  if (loading) return <Loader />;
 
   return (
     <View style={styles.container}>
@@ -61,7 +97,13 @@ const LoginScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleRegister}>
+        {/* error message */}
+        {errorMessage && (
+          <Text style={styles.errorMessage}>{errorMessage}</Text>
+        )}
+
+        {/* Login */}
+        <TouchableOpacity onPress={handleLogin}>
           <Text style={styles.register}>Login</Text>
         </TouchableOpacity>
       </View>
@@ -119,6 +161,14 @@ const styles = StyleSheet.create({
     right: 5,
     top: "50%",
     transform: [{ translateY: "-50%" }],
+  },
+  errorMessage: {
+    borderRadius: 5,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: "white",
+    textAlign: "center",
+    backgroundColor: "#AD6A7A38",
   },
   register: {
     fontSize: 20,
