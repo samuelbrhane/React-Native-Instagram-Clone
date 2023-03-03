@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 import { Loader } from "./components";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +15,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // check user state
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -24,28 +27,31 @@ export default function App() {
     });
   }, [user]);
 
+  // return loader component while loading
   if (loading) return <Loader />;
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Register">
-          <Stack.Screen
-            name="Register"
-            component={!user ? RegisterScreen : HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={!user ? LoginScreen : HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={user ? HomeScreen : RegisterScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Register">
+            <Stack.Screen
+              name="Register"
+              component={!user ? RegisterScreen : HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={!user ? LoginScreen : HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Home"
+              component={user ? HomeScreen : RegisterScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
