@@ -7,8 +7,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { Touchable } from "react-native";
-import { TouchableWithoutFeedback } from "react-native";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -107,7 +105,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginVertical: 20,
+    marginBottom: 20,
   },
   formContainer: {
     paddingHorizontal: 30,

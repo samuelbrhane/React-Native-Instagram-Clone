@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginVertical: 20,
+    marginBottom: 20,
   },
   formContainer: {
     paddingHorizontal: 30,
