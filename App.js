@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomeScreen, RegisterScreen, LoginScreen } from "./screens";
+import { HomeScreen, RegisterScreen, LoginScreen, FeedScreen } from "./screens";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
