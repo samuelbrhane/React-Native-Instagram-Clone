@@ -1,6 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomeScreen, RegisterScreen, LoginScreen, FeedScreen } from "./screens";
+import {
+  HomeScreen,
+  RegisterScreen,
+  LoginScreen,
+  FeedScreen,
+  AddPostScreen,
+} from "./screens";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -48,6 +54,10 @@ export default function App() {
             <Stack.Screen
               name="Home"
               component={user ? HomeScreen : RegisterScreen}
+            />
+            <Stack.Screen
+              name="AddPost"
+              component={user ? AddPostScreen : RegisterScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
