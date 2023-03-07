@@ -16,7 +16,7 @@ const MainScreen = () => {
       activeColor="#232226"
       inactiveColor="#F4EFF1"
       barStyle={{
-        backgroundColor: "#F65175",
+        backgroundColor: "#F65CD7",
         height: 50,
         justifyContent: "center",
       }}

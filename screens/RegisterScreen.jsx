@@ -53,6 +53,8 @@ const RegisterScreen = ({ navigation }) => {
       });
   };
 
+  const handleGoogle = () => {};
+
   // set error message to null after 5s
   useEffect(() => {
     setTimeout(() => {
@@ -120,23 +122,25 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         )}
 
-        {/* register */}
-        <TouchableOpacity onPress={handleRegister}>
-          <Text style={styles.register}>Register</Text>
-        </TouchableOpacity>
+        <View style={styles.authContainer}>
+          {/* register */}
+          <TouchableOpacity onPress={handleRegister}>
+            <Text style={styles.register}>Login</Text>
+          </TouchableOpacity>
+
+          {/* Google Login */}
+          <TouchableOpacity onPress={handleGoogle}>
+            <Text style={styles.google}>Continue With Google</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Footer Link */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          Already have an account?{" "}
-          <Text
-            style={styles.footerLink}
-            onPress={() => navigation.navigate("Login")}
-          >
-            Login
-          </Text>
-        </Text>
+      <View style={styles.link}>
+        <Text style={styles.footerText}>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.footerLink}>Login</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
