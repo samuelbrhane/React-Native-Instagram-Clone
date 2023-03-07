@@ -3,7 +3,7 @@ import { Camera, CameraType } from "expo-camera";
 import React, { useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 
-const AddPostScreen = () => {
+const AddPostScreen = ({ navigation }) => {
   const [hasCameraPermission, setHasCameraPermission] = React.useState();
   const [type, setType] = React.useState(CameraType.back);
   const [image, setImage] = React.useState(null);
@@ -40,7 +40,6 @@ const AddPostScreen = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
     if (!result.canceled) {
@@ -58,13 +57,34 @@ const AddPostScreen = () => {
         </Camera>
       )}
       {image ? (
-        <View>
-          <TouchableOpacity
-            style={styles.buttons}
-            onPress={() => setImage(null)}
-          >
-            <Text>Retake Pic</Text>
-          </TouchableOpacity>
+        <View style={styles.cameraContainer}>
+          <View style={styles.btn}>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => setImage(null)}
+            >
+              <Text>Retake Pic</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => navigation.navigate("Save", { image })}
+            >
+              <Text>Save</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 5, backgroundColor: "white" }}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                paddingVertical: 10,
+              }}
+              onPress={pickImage}
+            >
+              <Text style={{ textAlign: "center" }}>
+                Take Image From Gallery
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       ) : (
         <View style={styles.cameraContainer}>
@@ -116,7 +136,6 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
     width: "100%",
-    borderRadius: 5,
   },
   image: {
     width: "100%",

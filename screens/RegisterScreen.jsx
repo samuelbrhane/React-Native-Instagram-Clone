@@ -37,10 +37,9 @@ const RegisterScreen = ({ navigation }) => {
           name,
           email,
           timestamp: serverTimestamp(),
-        }).then(() => {
-          setLoading(false);
-          navigation.navigate("Main");
         });
+        navigation.navigate("Main");
+        setLoading(false);
       })
       .catch((error) => {
         setErrorMessage(
@@ -60,6 +59,8 @@ const RegisterScreen = ({ navigation }) => {
       setErrorMessage(null);
     }, 5000);
   }, [errorMessage]);
+
+  console.log("loading", loading);
 
   if (loading) return <Loader />;
 

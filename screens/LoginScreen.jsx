@@ -25,8 +25,6 @@ const LoginScreen = ({ navigation }) => {
         // Signed in
         const user = userCredential.user;
         navigation.navigate("Main");
-
-        // ...
         setLoading(false);
       })
       .catch((error) => {
@@ -47,6 +45,8 @@ const LoginScreen = ({ navigation }) => {
       setErrorMessage(null);
     }, 5000);
   }, [errorMessage]);
+
+  console.log("loading", loading);
 
   if (loading) return <Loader />;
 

@@ -12,31 +12,46 @@ import {
   LoginScreen,
   MainScreen,
   AddPostScreen,
+  SaveScreen,
 } from "./screens";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [activeUser, setActiveUser] = useState();
   const [loading, setLoading] = useState(true);
 
   // check user state
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user);
+        setActiveUser(user);
+        setLoading(false);
       } else {
-        setUser(null);
+        setActiveUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
-  }, [user]);
+  }, [activeUser]);
 
   // return loader component while loading
-  if (loading) return <Loader />;
+  if (loading || activeUser === undefined) return <Loader />;
 
-  console.log("user", user);
-  if (!user) {
+  if (activeUser) {
+    return (
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Main">
+              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen name="AddPost" component={AddPostScreen} />
+              <Stack.Screen name="Save" component={SaveScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </Provider>
+    );
+  } else {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Register">
@@ -54,17 +69,4 @@ export default function App() {
       </NavigationContainer>
     );
   }
-
-  return (
-    <Provider store={store}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen name="Main" component={MainScreen} />
-            <Stack.Screen name="AddPost" component={AddPostScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </Provider>
-  );
 }
