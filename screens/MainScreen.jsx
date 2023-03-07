@@ -1,12 +1,14 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { FeedScreen, ProfileScreen, EmptyScreen } from ".";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import FeedScreen from "./FeedScreen";
+import ProfileScreen from "./ProfileScreen";
+import EmptyScreen from "./EmptyScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
-const HomeScreen = () => {
+const MainScreen = () => {
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -65,6 +67,6 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default MainScreen;
 
 const styles = StyleSheet.create({});

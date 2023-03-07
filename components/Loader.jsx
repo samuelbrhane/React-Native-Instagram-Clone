@@ -6,7 +6,7 @@ const Loader = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../images/instagram.gif")}
+        source={require("../assets/instagram.gif")}
         style={styles.loader}
       />
     </View>

@@ -4,8 +4,8 @@ import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase/config";
 import { Loader } from "../components";
-import { styles } from "../styles/authStyle";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { styles } from "../styles/authStyle";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);

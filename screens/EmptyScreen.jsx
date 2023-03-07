@@ -1,5 +1,5 @@
 const EmptyScreen = () => {
-  return null;
+  return;
 };
 
 export default EmptyScreen;

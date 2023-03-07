@@ -19,8 +19,6 @@
     "expo": "~48.0.5",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.17.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "react-native": "0.71.3",
     "react-native-dotenv": "^3.4.8",
     "react-native-paper": "^5.2.0",
@@ -28,9 +26,12 @@
     "react-native-screens": "~3.20.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10",
-    "react-redux": "^8.0.5"
+    "react-redux": "^8.0.5",
+    "expo-camera": "~13.2.1"
   },
-  "devDependencies": {
+  "peerDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "@babel/core": "^7.20.0"
   },
   "private": true
