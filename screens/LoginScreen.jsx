@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        navigation.navigate("Home");
+        navigation.navigate("Main");
 
         // ...
         setLoading(false);

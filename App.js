@@ -34,6 +34,8 @@ export default function App() {
 
   // return loader component while loading
   if (loading) return <Loader />;
+
+  console.log("user", user);
   if (!user) {
     return (
       <NavigationContainer>

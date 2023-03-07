@@ -39,7 +39,7 @@ const RegisterScreen = ({ navigation }) => {
           timestamp: serverTimestamp(),
         }).then(() => {
           setLoading(false);
-          navigation.navigate("Home");
+          navigation.navigate("Main");
         });
       })
       .catch((error) => {
