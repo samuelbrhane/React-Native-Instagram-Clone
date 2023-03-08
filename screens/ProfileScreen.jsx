@@ -33,7 +33,6 @@ const ProfileScreen = () => {
     }
   }, []);
 
-  console.log("userPosts: " + JSON.stringify(userPosts));
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -77,8 +76,8 @@ const ProfileScreen = () => {
         >
           <TouchableOpacity
             style={{
-              backgroundColor: "#E2E8E5",
-              width: "50%",
+              backgroundColor: "#E6E2E5",
+              width: "48%",
               borderRadius: 5,
               paddingVertical: 5,
             }}
@@ -89,8 +88,8 @@ const ProfileScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              backgroundColor: "#E2E8E5",
-              width: "50%",
+              backgroundColor: "#E6E2E5",
+              width: "48%",
               borderRadius: 5,
               paddingVertical: 5,
             }}
