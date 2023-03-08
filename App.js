@@ -43,7 +43,11 @@ export default function App() {
         <SafeAreaProvider>
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Main">
-              <Stack.Screen name="Main" component={MainScreen} />
+              <Stack.Screen
+                name="Main"
+                component={MainScreen}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="AddPost" component={AddPostScreen} />
               <Stack.Screen name="Save" component={SaveScreen} />
             </Stack.Navigator>

@@ -60,7 +60,7 @@ const MainScreen = () => {
             <FontAwesome5 name="user-circle" size={24} color={color} />
           ),
 
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Tab.Navigator>
