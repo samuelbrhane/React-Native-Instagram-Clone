@@ -8,12 +8,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { UserInfo, UsersCard } from "../components";
+import { UserInfo, UserPosts, UsersCard } from "../components";
 import { userData } from "../userData";
 
 const ProfileScreen = () => {
   const [userPosts, setUserPosts] = useState([]);
 
+  // get user posts
   useEffect(() => {
     if (auth?.currentUser) {
       const q = query(
@@ -34,11 +35,13 @@ const ProfileScreen = () => {
 
   console.log("userPosts: " + JSON.stringify(userPosts));
   return (
-    <View
+    <ScrollView
+      showsVerticalScrollIndicator={false}
       style={{
-        marginTop: 30,
+        marginTop: 20,
         flex: 1,
         paddingVertical: 10,
+        backgroundColor: "white",
       }}
     >
       <View
@@ -59,7 +62,7 @@ const ProfileScreen = () => {
           Profile
         </Text>
       </View>
-      <View style={{ paddingHorizontal: 20 }}>
+      <View style={{ paddingHorizontal: 10 }}>
         {/*User Information  */}
         <UserInfo />
 
@@ -99,8 +102,15 @@ const ProfileScreen = () => {
         </View>
 
         {/* Discover People */}
-        <View style={{ marginTop: 12, marginBottom: 10 }}>
-          <Text style={{ fontWeight: "semibold" }}>Discover people</Text>
+        <View
+          style={{
+            marginTop: 12,
+            marginBottom: 10,
+          }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+            Discover people
+          </Text>
         </View>
 
         {/* users */}
@@ -114,7 +124,17 @@ const ProfileScreen = () => {
           })}
         </ScrollView>
       </View>
-    </View>
+      {/* user posts */}
+      <View
+        style={{
+          marginVertical: 10,
+          paddingHorizontal: 10,
+        }}
+      >
+        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Posts</Text>
+        <UserPosts userPosts={userPosts} />
+      </View>
+    </ScrollView>
   );
 };
 

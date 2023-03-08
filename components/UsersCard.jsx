@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Image, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -41,5 +41,3 @@ const UsersCard = ({ user }) => {
 };
 
 export default UsersCard;
-
-const styles = StyleSheet.create({});

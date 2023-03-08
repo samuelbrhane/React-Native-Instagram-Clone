@@ -20,7 +20,7 @@ const SaveScreen = (props) => {
         const filename = `${auth?.currentUser?.uid}-${Math.random().toString(
           36
         )}`;
-        const storageRef = ref(storage, `posts/${filename}`);
+        const storageRef = ref(storage, filename);
         const uploadTask = uploadBytesResumable(storageRef, imageBlob);
         uploadTask.on(
           "state_changed",

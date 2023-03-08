@@ -27,7 +27,6 @@ const AddPostScreen = ({ navigation }) => {
     if (cameraRef.current) {
       try {
         const data = await cameraRef.current.takePictureAsync();
-        console.log("data", data);
         setImage(data.uri);
       } catch (error) {
         console.log("error", error);
