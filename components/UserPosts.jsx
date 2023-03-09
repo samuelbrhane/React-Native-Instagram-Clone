@@ -3,7 +3,7 @@ import React from "react";
 
 const UserPosts = ({ userPosts }) => {
   return (
-    <View style={{ marginTop: 8 }}>
+    <View style={{ marginTop: 8, marginBottom: 25 }}>
       <FlatList
         data={userPosts}
         keyExtractor={(item) => item.id}

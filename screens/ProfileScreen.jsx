@@ -1,4 +1,10 @@
-import { Text, TouchableOpacity, View, ScrollView } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  StatusBar,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import {
@@ -34,20 +40,11 @@ const ProfileScreen = () => {
   }, []);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{
-        marginTop: 20,
-        flex: 1,
-        paddingVertical: 10,
-        backgroundColor: "white",
-      }}
-    >
+    <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
       <View
         style={{
           backgroundColor: "#F65CD7",
           paddingVertical: 8,
-          marginBottom: 10,
         }}
       >
         <Text
@@ -61,79 +58,88 @@ const ProfileScreen = () => {
           Profile
         </Text>
       </View>
-      <View style={{ paddingHorizontal: 10 }}>
-        {/*User Information  */}
-        <UserInfo />
-
-        {/* Profile change */}
-        <View
-          style={{
-            marginTop: 10,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            gap: 10,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#E6E2E5",
-              width: "48%",
-              borderRadius: 5,
-              paddingVertical: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
-              Edit Profile
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#E6E2E5",
-              width: "48%",
-              borderRadius: 5,
-              paddingVertical: 5,
-            }}
-          >
-            <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
-              Share Profile
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Discover People */}
-        <View
-          style={{
-            marginTop: 12,
-            marginBottom: 10,
-          }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-            Discover people
-          </Text>
-        </View>
-
-        {/* users */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {userData.map((user, index) => {
-            return (
-              <View style={{ paddingHorizontal: 3 }} key={index}>
-                <UsersCard user={user} />
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-      {/* user posts */}
-      <View
+      <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
-          marginVertical: 10,
-          paddingHorizontal: 10,
+          flex: 1,
+          paddingVertical: 10,
+          backgroundColor: "white",
         }}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>Posts</Text>
-        <UserPosts userPosts={userPosts} />
-      </View>
-    </ScrollView>
+        <View style={{ paddingHorizontal: 10 }}>
+          {/*User Information  */}
+          <UserInfo />
+
+          {/* Profile change */}
+          <View
+            style={{
+              marginTop: 10,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              gap: 10,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#E6E2E5",
+                width: "48%",
+                borderRadius: 5,
+                paddingVertical: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
+                Edit Profile
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#E6E2E5",
+                width: "48%",
+                borderRadius: 5,
+                paddingVertical: 5,
+              }}
+            >
+              <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
+                Share Profile
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Discover People */}
+          <View
+            style={{
+              marginTop: 12,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+              Discover people
+            </Text>
+          </View>
+
+          {/* users */}
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {userData.map((user, index) => {
+              return (
+                <View style={{ paddingHorizontal: 3 }} key={index}>
+                  <UsersCard user={user} />
+                </View>
+              );
+            })}
+          </ScrollView>
+        </View>
+        {/* user posts */}
+        <View
+          style={{
+            marginVertical: 10,
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text style={{ fontWeight: "bold", fontSize: 16 }}>Posts</Text>
+          <UserPosts userPosts={userPosts} />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 

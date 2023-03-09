@@ -125,7 +125,7 @@ const RegisterScreen = ({ navigation }) => {
         <View style={styles.authContainer}>
           {/* register */}
           <TouchableOpacity onPress={handleRegister}>
-            <Text style={styles.register}>Login</Text>
+            <Text style={styles.register}>Register</Text>
           </TouchableOpacity>
 
           {/* Google Login */}
