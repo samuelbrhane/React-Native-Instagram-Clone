@@ -7,9 +7,9 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { Entypo, AntDesign, EvilIcons } from "@expo/vector-icons";
+import { Entypo, EvilIcons } from "@expo/vector-icons";
 
-const PostCard = () => {
+const PostCard = ({ navigation }) => {
   const [fullText, setFullText] = useState(false);
   console.log("full text", fullText);
 
@@ -88,7 +88,10 @@ const PostCard = () => {
           </View>
 
           {/* comments */}
-          <TouchableOpacity style={{ marginVertical: 1 }}>
+          <TouchableOpacity
+            style={{ marginVertical: 1 }}
+            onPress={() => navigation.navigate("Comments")}
+          >
             <Text style={{ color: "gray" }}>View all 86 comments</Text>
           </TouchableOpacity>
 

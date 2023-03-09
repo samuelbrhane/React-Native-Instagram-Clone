@@ -13,6 +13,7 @@ import {
   MainScreen,
   AddPostScreen,
   SaveScreen,
+  CommentScreen,
 } from "./screens";
 
 const Stack = createNativeStackNavigator();
@@ -50,6 +51,11 @@ export default function App() {
               />
               <Stack.Screen name="AddPost" component={AddPostScreen} />
               <Stack.Screen name="Save" component={SaveScreen} />
+              <Stack.Screen
+                name="Comments"
+                component={CommentScreen}
+                options={{ headerShadowVisible: false }}
+              />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>

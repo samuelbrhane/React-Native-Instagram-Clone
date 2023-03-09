@@ -10,7 +10,7 @@ import React from "react";
 import { userData } from "../userData";
 import { PostCard, UsersCard } from "../components";
 
-const FeedScreen = () => {
+const FeedScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
       <View
@@ -80,11 +80,11 @@ const FeedScreen = () => {
 
         {/* Posts */}
         <View style={{ borderTopColor: "gray", borderTopWidth: 0.4 }}>
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
+          <PostCard navigation={navigation} />
+          <PostCard navigation={navigation} />
+          <PostCard navigation={navigation} />
+          <PostCard navigation={navigation} />
+          <PostCard navigation={navigation} />
         </View>
       </ScrollView>
     </View>
