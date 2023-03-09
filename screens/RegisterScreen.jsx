@@ -70,13 +70,13 @@ const RegisterScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Logo */}
       <AntDesign name="instagram" size={100} color="white" />
-      <Text style={styles.title}>Instagram</Text>
+      <Text style={styles.title}>Main</Text>
 
       {/* Register Form */}
       <View style={styles.formContainer}>
         {/* user name */}
         <TextInput
-          placeholder="User Name"
+          placeholder="Full Name"
           id="name"
           style={styles.authInput}
           value={inputData.name}
