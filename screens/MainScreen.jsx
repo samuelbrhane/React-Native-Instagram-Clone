@@ -7,14 +7,15 @@ import ProfileScreen from "./ProfileScreen";
 import EmptyScreen from "./EmptyScreen";
 import { auth, db } from "../firebase/config";
 import { collection, getDocs } from "firebase/firestore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GET_USERS } from "../redux/slice/usersSlice";
-
 const Tab = createMaterialBottomTabNavigator();
+import { selectActiveUser, selectOtherUsers } from "../redux/slice/usersSlice";
 
 const MainScreen = () => {
   const dispatch = useDispatch();
-
+  const activeUser = useSelector(selectActiveUser);
+  const otherUsers = useSelector(selectOtherUsers);
   // get all
   useEffect(() => {
     const fetchData = async () => {

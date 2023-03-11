@@ -1,10 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectActiveUser } from "../redux/slice/usersSlice";
 
-const UserInfo = () => {
-  const activeUser = useSelector(selectActiveUser);
+const UserInfo = ({ activeUser }) => {
   return (
     <View
       style={{

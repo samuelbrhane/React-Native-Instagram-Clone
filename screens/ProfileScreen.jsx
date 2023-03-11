@@ -11,9 +11,12 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../firebase/config";
 import {
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
+  setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { UserInfo, UsersCard } from "../components";
@@ -29,6 +32,8 @@ const ProfileScreen = ({ navigation }) => {
   );
   const [users, setUsers] = useState(otherUsers);
   const [userPosts, setUserPosts] = useState([]);
+
+  console.log("users", users);
 
   // get user posts
   useEffect(() => {
@@ -56,8 +61,20 @@ const ProfileScreen = ({ navigation }) => {
 
   // follow user
   const followUser = async (id) => {
-    dispatch(HANDLE_FOLLOW(id));
+    const followedPerson = users.find((user) => user.id === id);
     setUsers(users.filter((user) => user.id !== id));
+
+    console.log("followUser", followUser);
+    dispatch(HANDLE_FOLLOW(id));
+    console.log("change data", activeUser.data.following);
+    if (auth?.currentUser) {
+      await updateDoc(doc(db, "users", auth?.currentUser?.uid), {
+        following: [...activeUser.data.following, id],
+      });
+      await updateDoc(doc(db, "users", id), {
+        followers: [...followedPerson.data.followers, auth?.currentUser?.uid],
+      });
+    }
   };
 
   // flat list render item
@@ -106,7 +123,7 @@ const ProfileScreen = ({ navigation }) => {
           <>
             <View>
               {/*User Information  */}
-              <UserInfo />
+              <UserInfo activeUser={activeUser} />
 
               {/* Profile change */}
               <View
