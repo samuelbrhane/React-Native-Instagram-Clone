@@ -23,23 +23,24 @@ const RegisterScreen = ({ navigation }) => {
     const { name, email, password } = inputData;
 
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user;
-        updateProfile(auth.currentUser, {
+        await updateProfile(auth.currentUser, {
           displayName: name,
         });
 
-        console.log("user: " + user);
-        // ...
-      })
-      .then(async () => {
+        console.log("user: " + JSON.stringify(user));
         await setDoc(doc(db, "users", user?.uid), {
-          name,
+          fullName: name,
           email,
+          followers: 0,
+          following: 0,
           timestamp: serverTimestamp(),
         });
+        console.log("userRegistered: ");
         navigation.navigate("Main");
+        // ...
       })
       .catch((error) => {
         setErrorMessage(

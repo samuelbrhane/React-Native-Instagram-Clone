@@ -8,9 +8,17 @@ import {
 } from "react-native";
 import React from "react";
 import { userData } from "../userData";
-import { PostCard, UsersCard } from "../components";
+import { PostCard } from "../components";
+import { useSelector } from "react-redux";
+import { selectActiveUser } from "../redux/slice/usersSlice";
+import { selectOtherUsers } from "../redux/slice/usersSlice";
 
 const FeedScreen = ({ navigation }) => {
+  const activeUser = useSelector(selectActiveUser);
+  const otherUsers = useSelector(selectOtherUsers);
+  console.log("active user: " + JSON.stringify(activeUser));
+  console.log("other users: " + JSON.stringify(otherUsers));
+
   return (
     <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
       <View
@@ -49,29 +57,72 @@ const FeedScreen = ({ navigation }) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={{ marginRight: 6 }}>
-            <Image
-              source={require("../assets/profile.jpg")}
-              style={{ width: 70, height: 70, borderRadius: 70 }}
-            />
-            <Text style={{ fontSize: 12 }}>User Name</Text>
+          <View style={{ marginRight: 10 }}>
+            {activeUser.data.profilePicture ? (
+              <Image
+                source={{ uri: user.data.profilePicture }}
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderRadius: 70,
+                }}
+              />
+            ) : (
+              <Image
+                source={require("../assets/Avatar.png")}
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderRadius: 70,
+                }}
+              />
+            )}
+
+            <Text style={{ fontSize: 10 }}>
+              {activeUser?.data.userName || activeUser?.data.fullName}
+            </Text>
           </View>
 
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {userData.map((user, index) => {
+            {otherUsers.map((user, index) => {
               return (
-                <View style={{ paddingHorizontal: 10 }} key={index}>
-                  <Image
-                    source={require("../assets/profile.jpg")}
-                    style={{
-                      width: 70,
-                      height: 70,
-                      borderRadius: 70,
-                      borderWidth: 1,
-                      borderColor: "#F34FDA",
-                    }}
-                  />
-                  <Text style={{ fontSize: 12 }}>User Name</Text>
+                <View
+                  style={{
+                    paddingHorizontal: 10,
+                    alignItems: "center",
+                    marginRight: 10,
+                    width: 80,
+                    height: 100,
+                  }}
+                  key={index}
+                >
+                  {user.data.profilePicture ? (
+                    <Image
+                      source={{ uri: user.data.profilePicture }}
+                      style={{
+                        width: 72,
+                        height: 70,
+                        borderRadius: 70,
+                        borderWidth: 1,
+                        borderColor: "#F34FDA",
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../assets/Avatar.png")}
+                      style={{
+                        width: 72,
+                        height: 70,
+                        borderRadius: 70,
+                        borderWidth: 1,
+                        borderColor: "#F34FDA",
+                      }}
+                    />
+                  )}
+
+                  <Text style={{ fontSize: 10 }}>
+                    {user?.data.userName || user?.data.fullName}
+                  </Text>
                 </View>
               );
             })}

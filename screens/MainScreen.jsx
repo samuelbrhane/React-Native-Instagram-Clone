@@ -1,14 +1,40 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import FeedScreen from "./FeedScreen";
 import ProfileScreen from "./ProfileScreen";
 import EmptyScreen from "./EmptyScreen";
+import { auth, db } from "../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { GET_USERS } from "../redux/slice/usersSlice";
 
 const Tab = createMaterialBottomTabNavigator();
 
 const MainScreen = () => {
+  const dispatch = useDispatch();
+
+  // get all
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = auth?.currentUser;
+      if (user) {
+        let users = [];
+        const querySnapshot = await getDocs(collection(db, "users"));
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          users.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        dispatch(GET_USERS(users));
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Tab.Navigator
       initialRouteName="Feed"
