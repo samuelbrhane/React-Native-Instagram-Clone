@@ -7,7 +7,6 @@ import {
   StatusBar,
 } from "react-native";
 import React from "react";
-import { userData } from "../userData";
 import { PostCard } from "../components";
 import { useSelector } from "react-redux";
 import { selectActiveUser } from "../redux/slice/usersSlice";
@@ -16,8 +15,6 @@ import { selectOtherUsers } from "../redux/slice/usersSlice";
 const FeedScreen = ({ navigation }) => {
   const activeUser = useSelector(selectActiveUser);
   const otherUsers = useSelector(selectOtherUsers);
-  console.log("active user: " + JSON.stringify(activeUser));
-  console.log("other users: " + JSON.stringify(otherUsers));
 
   return (
     <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
@@ -57,10 +54,10 @@ const FeedScreen = ({ navigation }) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={{ marginRight: 10 }}>
-            {activeUser.data.profilePicture ? (
+          <View style={{ marginRight: 10, alignItems: "center" }}>
+            {activeUser?.data.profilePicture ? (
               <Image
-                source={{ uri: user.data.profilePicture }}
+                source={{ uri: activeUser?.data.profilePicture }}
                 style={{
                   width: 70,
                   height: 70,
@@ -96,9 +93,9 @@ const FeedScreen = ({ navigation }) => {
                   }}
                   key={index}
                 >
-                  {user.data.profilePicture ? (
+                  {user?.data.profilePicture ? (
                     <Image
-                      source={{ uri: user.data.profilePicture }}
+                      source={{ uri: user?.data.profilePicture }}
                       style={{
                         width: 72,
                         height: 70,

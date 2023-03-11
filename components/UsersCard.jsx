@@ -2,8 +2,11 @@ import { Image, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-const UsersCard = ({ user }) => {
-  const { name, image } = user;
+const UsersCard = ({ user, removeUser, followUser }) => {
+  const {
+    id,
+    data: { fullName, profilePicture },
+  } = user;
 
   return (
     <View
@@ -17,16 +20,43 @@ const UsersCard = ({ user }) => {
         position: "relative",
       }}
     >
-      <TouchableOpacity style={{ position: "absolute", top: 5, right: 10 }}>
+      {/* Remove user */}
+      <TouchableOpacity
+        style={{ position: "absolute", top: 5, right: 10 }}
+        onPress={() => removeUser(id)}
+      >
         <FontAwesome5 name="times" size={16} color="#234323" />
       </TouchableOpacity>
 
-      <Image
-        source={require("../assets/profile.jpg")}
-        style={{ height: 100, width: 100, borderRadius: 100, marginBottom: 5 }}
-      />
-      <Text style={{ marginBottom: 20 }}>{name}</Text>
+      {/* user image */}
+      {profilePicture ? (
+        <Image
+          source={{ uri: profilePicture }}
+          style={{
+            height: 100,
+            width: 100,
+            borderRadius: 100,
+            marginBottom: 5,
+          }}
+        />
+      ) : (
+        <Image
+          source={require("../assets/Avatar.png")}
+          style={{
+            height: 100,
+            width: 100,
+            borderRadius: 100,
+            marginBottom: 5,
+          }}
+        />
+      )}
+
+      {/* user name */}
+      <Text style={{ marginBottom: 20 }}>{fullName}</Text>
+
+      {/* follow user */}
       <TouchableOpacity
+        onPress={() => followUser(id)}
         style={{
           backgroundColor: "#F65CD7",
           paddingHorizontal: 24,

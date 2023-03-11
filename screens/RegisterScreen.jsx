@@ -30,15 +30,14 @@ const RegisterScreen = ({ navigation }) => {
           displayName: name,
         });
 
-        console.log("user: " + JSON.stringify(user));
         await setDoc(doc(db, "users", user?.uid), {
           fullName: name,
           email,
-          followers: 0,
-          following: 0,
+          followers: [],
+          following: [],
           timestamp: serverTimestamp(),
         });
-        console.log("userRegistered: ");
+
         navigation.navigate("Main");
         // ...
       })

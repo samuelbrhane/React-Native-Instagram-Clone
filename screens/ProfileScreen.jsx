@@ -17,9 +17,17 @@ import {
   where,
 } from "firebase/firestore";
 import { UserInfo, UsersCard } from "../components";
-import { userData } from "../userData";
+import { useSelector, useDispatch } from "react-redux";
+import { selectOtherUsers, selectActiveUser } from "../redux/slice/usersSlice";
+import { HANDLE_FOLLOW } from "../redux/slice/usersSlice";
 
 const ProfileScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const activeUser = useSelector(selectActiveUser);
+  let otherUsers = useSelector(selectOtherUsers).filter(
+    (user) => !user?.data.following.includes(activeUser.id)
+  );
+  const [users, setUsers] = useState(otherUsers);
   const [userPosts, setUserPosts] = useState([]);
 
   // get user posts
@@ -41,6 +49,18 @@ const ProfileScreen = ({ navigation }) => {
     }
   }, []);
 
+  // remove user from discover people list
+  const removeUser = (id) => {
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  // follow user
+  const followUser = async (id) => {
+    dispatch(HANDLE_FOLLOW(id));
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  // flat list render item
   const renderItem = ({ item }, index) => {
     return (
       <View
@@ -52,7 +72,7 @@ const ProfileScreen = ({ navigation }) => {
       >
         <Image
           source={{
-            uri: item.data.imageUrl,
+            uri: item?.data?.imageUrl,
           }}
           style={{ height: 120, width: "100%" }}
         />
@@ -79,6 +99,7 @@ const ProfileScreen = ({ navigation }) => {
           Profile
         </Text>
       </View>
+
       <FlatList
         style={{ paddingHorizontal: 10, paddingTop: 10, marginBottom: 25 }}
         ListHeaderComponent={
@@ -140,10 +161,14 @@ const ProfileScreen = ({ navigation }) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
               >
-                {userData.map((user, index) => {
+                {users.map((user, index) => {
                   return (
                     <View style={{ paddingHorizontal: 3 }} key={index}>
-                      <UsersCard user={user} />
+                      <UsersCard
+                        user={user}
+                        removeUser={removeUser}
+                        followUser={followUser}
+                      />
                     </View>
                   );
                 })}

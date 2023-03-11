@@ -1,7 +1,10 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { useSelector } from "react-redux";
+import { selectActiveUser } from "../redux/slice/usersSlice";
 
 const UserInfo = () => {
+  const activeUser = useSelector(selectActiveUser);
   return (
     <View
       style={{
@@ -19,11 +22,21 @@ const UserInfo = () => {
           alignItems: "center",
         }}
       >
-        <Image
-          source={require("../assets/profile.jpg")}
-          style={{ height: 80, width: 80, borderRadius: 80 }}
-        />
-        <Text style={{ fontWeight: "semibold" }}>User Name</Text>
+        {activeUser?.data?.profilePicture ? (
+          <Image
+            source={{ uri: activeUser?.data?.profilePicture }}
+            style={{ height: 80, width: 80, borderRadius: 80 }}
+          />
+        ) : (
+          <Image
+            source={require("../assets/Avatar.png")}
+            style={{ height: 80, width: 80, borderRadius: 80 }}
+          />
+        )}
+
+        <Text style={{ fontWeight: "semibold" }}>
+          {activeUser?.data?.fullName}
+        </Text>
       </View>
 
       {/* User Data */}
@@ -43,13 +56,17 @@ const UserInfo = () => {
 
         {/* Number of followers */}
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontWeight: "bold" }}>1113</Text>
+          <Text style={{ fontWeight: "bold" }}>
+            {activeUser?.data?.followers.length}
+          </Text>
           <Text>Followers</Text>
         </View>
 
         {/* Number of following */}
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontWeight: "bold" }}>234</Text>
+          <Text style={{ fontWeight: "bold" }}>
+            {activeUser?.data?.following.length}
+          </Text>
           <Text>Following</Text>
         </View>
       </View>
