@@ -19,7 +19,7 @@ import {
 import { UserInfo, UsersCard } from "../components";
 import { userData } from "../userData";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const [userPosts, setUserPosts] = useState([]);
 
   // get user posts
@@ -97,6 +97,7 @@ const ProfileScreen = () => {
                 }}
               >
                 <TouchableOpacity
+                  onPress={() => navigation.navigate("Edit Profile")}
                   style={{
                     backgroundColor: "#E6E2E5",
                     width: "48%",

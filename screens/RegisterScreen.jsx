@@ -20,26 +20,26 @@ const RegisterScreen = ({ navigation }) => {
   // Register User
   const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
     const { name, email, password } = inputData;
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        // Signed in
 
-        // Add user name to user display name
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
         updateProfile(auth.currentUser, {
           displayName: name,
         });
-        const user = userCredential.user;
 
-        // Save user data to Firestore database
+        console.log("user: " + user);
+        // ...
+      })
+      .then(async () => {
         await setDoc(doc(db, "users", user?.uid), {
           name,
           email,
           timestamp: serverTimestamp(),
         });
         navigation.navigate("Main");
-        setLoading(false);
       })
       .catch((error) => {
         setErrorMessage(
@@ -49,7 +49,7 @@ const RegisterScreen = ({ navigation }) => {
             .replace("auth/", "")
             .slice(0, 30)
         );
-        setLoading(false);
+        console.log("error: " + errorMessage);
       });
   };
 

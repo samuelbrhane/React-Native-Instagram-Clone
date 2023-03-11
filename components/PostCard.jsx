@@ -11,7 +11,6 @@ import { Entypo, EvilIcons } from "@expo/vector-icons";
 
 const PostCard = ({ navigation }) => {
   const [fullText, setFullText] = useState(false);
-  console.log("full text", fullText);
 
   const caption = `Lorem ipsum dolor sit amet consectetur `;
   return (

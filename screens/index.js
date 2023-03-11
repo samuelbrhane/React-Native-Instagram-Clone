@@ -7,3 +7,4 @@ export { default as RegisterScreen } from "./RegisterScreen";
 export { default as ProfileScreen } from "./ProfileScreen";
 export { default as SaveScreen } from "./SaveScreen";
 export { default as CommentScreen } from "./CommentScreen";
+export { default as EditScreen } from "./EditScreen";

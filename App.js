@@ -1,4 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import {
   AddPostScreen,
   SaveScreen,
   CommentScreen,
+  EditScreen,
 } from "./screens";
 
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ export default function App() {
 
   // check user state
   useEffect(() => {
+    setLoading(true);
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setActiveUser(user);
@@ -51,6 +53,11 @@ export default function App() {
               />
               <Stack.Screen name="AddPost" component={AddPostScreen} />
               <Stack.Screen name="Save" component={SaveScreen} />
+              <Stack.Screen
+                name="Edit Profile"
+                component={EditScreen}
+                options={{ headerShadowVisible: false }}
+              />
               <Stack.Screen
                 name="Comments"
                 component={CommentScreen}

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { Loader } from "../components";
 import { auth } from "../firebase/config";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { connectAuthEmulator, signInWithEmailAndPassword } from "firebase/auth";
 import { styles } from "../styles/authStyle";
 
 const LoginScreen = ({ navigation }) => {
@@ -15,17 +15,15 @@ const LoginScreen = ({ navigation }) => {
     password: "",
   });
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleLogin = () => {
     const { email, password } = inputData;
-
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log("user: " + user);
         navigation.navigate("Main");
-        setLoading(false);
+        // ...
       })
       .catch((error) => {
         setErrorMessage(
@@ -35,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
             .replace("auth/", "")
             .slice(0, 30)
         );
-        setLoading(false);
+        console.log("error: " + errorMessage);
       });
   };
 
