@@ -6,6 +6,8 @@ import { auth, db } from "../firebase/config";
 import { Loader } from "../components";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { styles } from "../styles/authStyle";
+import { BACKEND_URL } from "@env";
+import axios from "axios";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,42 +20,31 @@ const RegisterScreen = ({ navigation }) => {
   });
 
   // Register User
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async () => {
+    setLoading(true);
     const { name, email, password } = inputData;
+    const { data } = await axios.post("http://10.0.2.2:8000/register", {
+      fullName: name,
+      email,
+      password,
+    });
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        await updateProfile(auth.currentUser, {
-          displayName: name,
-        });
-
-        await setDoc(doc(db, "users", user?.uid), {
-          fullName: name,
-          email,
-          followers: [],
-          following: [],
-          timestamp: serverTimestamp(),
-        });
-
-        navigation.navigate("Main");
-        // ...
-      })
-      .catch((error) => {
-        setErrorMessage(
-          error.message
-            .replace("Firebase: Error (", "")
-            .replace(")", "")
-            .replace("auth/", "")
-            .slice(0, 30)
-        );
-        console.log("error: " + errorMessage);
+    if (data.status === false) {
+      setErrorMessage(data.error);
+    } else {
+      await setDoc(doc(db, "users", data.user._id), {
+        fullName: name,
+        email,
+        followers: [],
+        following: [],
+        timestamp: serverTimestamp(),
       });
+      navigation.navigate("Main");
+    }
+    setLoading(false);
   };
 
-  const handleGoogle = () => {};
+  // const handleGoogle = () => {};
 
   // set error message to null after 5s
   useEffect(() => {
@@ -61,8 +52,6 @@ const RegisterScreen = ({ navigation }) => {
       setErrorMessage(null);
     }, 5000);
   }, [errorMessage]);
-
-  console.log("loading", loading);
 
   if (loading) return <Loader />;
 
@@ -129,9 +118,9 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           {/* Google Login */}
-          <TouchableOpacity onPress={handleGoogle}>
+          {/* <TouchableOpacity onPress={handleGoogle}>
             <Text style={styles.google}>Continue With Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

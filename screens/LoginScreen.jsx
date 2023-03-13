@@ -2,9 +2,8 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { Loader } from "../components";
-import { auth } from "../firebase/config";
-import { connectAuthEmulator, signInWithEmailAndPassword } from "firebase/auth";
 import { styles } from "../styles/authStyle";
+import axios from "axios";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,30 +14,20 @@ const LoginScreen = ({ navigation }) => {
     password: "",
   });
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    setLoading(true);
     const { email, password } = inputData;
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("user: " + user);
-        navigation.navigate("Main");
-        // ...
-      })
-      .catch((error) => {
-        setErrorMessage(
-          error.message
-            .replace("Firebase: Error (", "")
-            .replace(")", "")
-            .replace("auth/", "")
-            .slice(0, 30)
-        );
-        console.log("error: " + errorMessage);
-      });
+    const { data } = await axios.post("http://10.0.2.2:8000/login", {
+      email,
+      password,
+    });
+    if (data.status === false) {
+      setErrorMessage(data.error);
+    } else {
+      navigation.navigate("Main");
+    }
+    setLoading(false);
   };
-
-  // Google Login
-  const handleGoogle = () => {};
 
   // set error message to null after 5s
   useEffect(() => {
@@ -46,8 +35,6 @@ const LoginScreen = ({ navigation }) => {
       setErrorMessage(null);
     }, 5000);
   }, [errorMessage]);
-
-  console.log("loading", loading);
 
   if (loading) return <Loader />;
 
@@ -106,9 +93,9 @@ const LoginScreen = ({ navigation }) => {
 
           {/* Google Login */}
           {/* Login */}
-          <TouchableOpacity onPress={handleGoogle}>
+          {/* <TouchableOpacity onPress={handleGoogle}>
             <Text style={styles.google}>Continue With Google</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

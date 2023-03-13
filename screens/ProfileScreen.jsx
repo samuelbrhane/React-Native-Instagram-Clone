@@ -15,26 +15,12 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
 import { UserInfo, UsersCard } from "../components";
-import { useSelector, useDispatch } from "react-redux";
-import { selectOtherUsers, selectActiveUser } from "../redux/slice/usersSlice";
-import { HANDLE_FOLLOW } from "../redux/slice/usersSlice";
 
 const ProfileScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const activeUser = useSelector(selectActiveUser);
-  let otherUsers = useSelector(selectOtherUsers).filter(
-    (user) => !user?.data.following.includes(activeUser.id)
-  );
-  const [users, setUsers] = useState(otherUsers);
-  const [userPosts, setUserPosts] = useState([]);
-
-  console.log("users", users);
-
   // get user posts
   useEffect(() => {
     if (auth?.currentUser) {
@@ -53,29 +39,6 @@ const ProfileScreen = ({ navigation }) => {
       });
     }
   }, []);
-
-  // remove user from discover people list
-  const removeUser = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
-
-  // follow user
-  const followUser = async (id) => {
-    const followedPerson = users.find((user) => user.id === id);
-    setUsers(users.filter((user) => user.id !== id));
-
-    console.log("followUser", followUser);
-    dispatch(HANDLE_FOLLOW(id));
-    console.log("change data", activeUser.data.following);
-    if (auth?.currentUser) {
-      await updateDoc(doc(db, "users", auth?.currentUser?.uid), {
-        following: [...activeUser.data.following, id],
-      });
-      await updateDoc(doc(db, "users", id), {
-        followers: [...followedPerson.data.followers, auth?.currentUser?.uid],
-      });
-    }
-  };
 
   // flat list render item
   const renderItem = ({ item }, index) => {
@@ -97,114 +60,132 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
+  console.log("users", users);
+
   return (
-    <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
-      <View
-        style={{
-          backgroundColor: "#F65CD7",
-          paddingVertical: 8,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: 20,
-          }}
-        >
-          Profile
-        </Text>
-      </View>
+    <Text>check</Text>
+    // <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
+    //   <View
+    //     style={{
+    //       backgroundColor: "#F65CD7",
+    //       paddingVertical: 8,
+    //     }}
+    //   >
+    //     <Text
+    //       style={{
+    //         textAlign: "center",
+    //         color: "white",
+    //         fontWeight: "bold",
+    //         fontSize: 20,
+    //       }}
+    //     >
+    //       Profile
+    //     </Text>
+    //   </View>
 
-      <FlatList
-        style={{ paddingHorizontal: 10, paddingTop: 10, marginBottom: 25 }}
-        ListHeaderComponent={
-          <>
-            <View>
-              {/*User Information  */}
-              <UserInfo activeUser={activeUser} />
+    //   <FlatList
+    //     style={{ paddingHorizontal: 10, paddingTop: 10, marginBottom: 25 }}
+    //     ListHeaderComponent={
+    //       <>
+    //         <View>
+    //           {/*User Information  */}
+    //           <UserInfo activeUser={activeUser} />
 
-              {/* Profile change */}
-              <View
-                style={{
-                  marginTop: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  gap: 10,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Edit Profile")}
-                  style={{
-                    backgroundColor: "#E6E2E5",
-                    width: "48%",
-                    borderRadius: 5,
-                    paddingVertical: 5,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
-                    Edit Profile
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#E6E2E5",
-                    width: "48%",
-                    borderRadius: 5,
-                    paddingVertical: 5,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
-                    Share Profile
-                  </Text>
-                </TouchableOpacity>
-              </View>
+    //           {/* Profile change */}
+    //           <View
+    //             style={{
+    //               marginTop: 10,
+    //               flexDirection: "row",
+    //               justifyContent: "space-between",
+    //               gap: 10,
+    //             }}
+    //           >
+    //             <TouchableOpacity
+    //               onPress={() => navigation.navigate("Edit Profile")}
+    //               style={{
+    //                 backgroundColor: "#E6E2E5",
+    //                 width: "48%",
+    //                 borderRadius: 5,
+    //                 paddingVertical: 5,
+    //               }}
+    //             >
+    //               <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
+    //                 Edit Profile
+    //               </Text>
+    //             </TouchableOpacity>
+    //             <TouchableOpacity
+    //               style={{
+    //                 backgroundColor: "#E6E2E5",
+    //                 width: "48%",
+    //                 borderRadius: 5,
+    //                 paddingVertical: 5,
+    //               }}
+    //             >
+    //               <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
+    //                 Share Profile
+    //               </Text>
+    //             </TouchableOpacity>
+    //           </View>
 
-              {/* Discover People */}
-              <View
-                style={{
-                  marginTop: 12,
-                  marginBottom: 10,
-                }}
-              >
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Discover people
-                </Text>
-              </View>
-
-              {/* users */}
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                {users.map((user, index) => {
-                  return (
-                    <View style={{ paddingHorizontal: 3 }} key={index}>
-                      <UsersCard
-                        user={user}
-                        removeUser={removeUser}
-                        followUser={followUser}
-                      />
-                    </View>
-                  );
-                })}
-              </ScrollView>
-            </View>
-            {/* user posts */}
-            <View style={{ marginTop: 10, marginBottom: 5 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>Posts</Text>
-            </View>
-          </>
-        }
-        data={userPosts}
-        keyExtractor={(item) => item.id}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        numColumns={3}
-        horizontal={false}
-        renderItem={renderItem}
-      />
-    </View>
+    //           {/* users */}
+    //           {users.length > 0 && (
+    //             <>
+    //               {/* Discover People */}
+    //               <View
+    //                 style={{
+    //                   marginTop: 12,
+    //                   marginBottom: 10,
+    //                 }}
+    //               >
+    //                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+    //                   Discover people
+    //                 </Text>
+    //               </View>
+    //               <ScrollView
+    //                 horizontal={true}
+    //                 showsHorizontalScrollIndicator={false}
+    //               >
+    //                 {users.map((user, index) => {
+    //                   return (
+    //                     <View style={{ paddingHorizontal: 3 }} key={index}>
+    //                       <UsersCard
+    //                         user={user}
+    //                         removeUser={removeUser}
+    //                         followUser={followUser}
+    //                       />
+    //                     </View>
+    //                   );
+    //                 })}
+    //               </ScrollView>
+    //             </>
+    //           )}
+    //         </View>
+    //         {/* user posts */}
+    //         <View style={{ marginTop: 10, marginBottom: 5 }}>
+    //           <Text style={{ fontWeight: "bold", fontSize: 16 }}>Posts</Text>
+    //         </View>
+    //       </>
+    //     }
+    //     data={userPosts}
+    //     keyExtractor={(item) => item.id}
+    //     columnWrapperStyle={{ justifyContent: "space-between" }}
+    //     numColumns={3}
+    //     horizontal={false}
+    //     renderItem={renderItem}
+    //     ListFooterComponent={
+    //       userPosts.length === 0 && (
+    //         <>
+    //           <Text style={{ textAlign: "center", marginTop: 12 }}>
+    //             When you post photos
+    //           </Text>
+    //           <Text style={{ textAlign: "center" }}>
+    //             They'll appear on your profile.
+    //           </Text>
+    //         </>
+    //       )
+    //     }
+    //   />
+    // </View>
   );
 };
 

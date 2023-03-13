@@ -1,40 +1,39 @@
 import { StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import FeedScreen from "./FeedScreen";
 import ProfileScreen from "./ProfileScreen";
 import EmptyScreen from "./EmptyScreen";
 import { auth, db } from "../firebase/config";
-import { collection, getDocs } from "firebase/firestore";
-import { useDispatch, useSelector } from "react-redux";
-import { GET_USERS } from "../redux/slice/usersSlice";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 const Tab = createMaterialBottomTabNavigator();
-import { selectActiveUser, selectOtherUsers } from "../redux/slice/usersSlice";
 
 const MainScreen = () => {
-  const dispatch = useDispatch();
-  const activeUser = useSelector(selectActiveUser);
-  const otherUsers = useSelector(selectOtherUsers);
-  // get all
+  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+
+  // get all users
   useEffect(() => {
     const fetchData = async () => {
-      const user = auth?.currentUser;
-      if (user) {
-        let users = [];
-        const querySnapshot = await getDocs(collection(db, "users"));
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          users.push({
-            id: doc.id,
-            data: doc.data(),
+      const unsubscribe = onSnapshot(
+        getDocs(collection(db, "users")),
+        (querySnapshot) => {
+          const users = [];
+          querySnapshot.forEach((doc) => {
+            users.push({ data: doc.data(), id: doc.id });
           });
-        });
-        dispatch(GET_USERS(users));
-      }
+
+          setUsers(users);
+          setLoading(false);
+        }
+      );
     };
     fetchData();
   }, []);
+
+  if (loading) return;
+  console.log("users", users);
 
   return (
     <Tab.Navigator
