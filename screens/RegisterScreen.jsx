@@ -1,13 +1,12 @@
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firebase/config";
+import { db } from "../firebase/config";
 import { Loader } from "../components";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { styles } from "../styles/authStyle";
-import { BACKEND_URL } from "@env";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RegisterScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +38,14 @@ const RegisterScreen = ({ navigation }) => {
         following: [],
         timestamp: serverTimestamp(),
       });
+      try {
+        const { user, token } = data;
+        const value = { fullName: user.fullName, email: user.email, token };
+        const userValue = JSON.stringify(value);
+        await AsyncStorage.setItem("instagramUser", userValue);
+      } catch (e) {
+        setErrorMessage("Can't store user in local storage");
+      }
       navigation.navigate("Main");
     }
     setLoading(false);

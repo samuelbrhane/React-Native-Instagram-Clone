@@ -1,4 +1,4 @@
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ import {
   CommentScreen,
   EditScreen,
 } from "./screens";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,16 +27,19 @@ export default function App() {
   // check user state
   useEffect(() => {
     setLoading(true);
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setActiveUser(user);
-        setLoading(false);
+    const getUserData = async () => {
+      const userValue = await AsyncStorage.getItem("instagramUser");
+      if (userValue) {
+        setActiveUser(JSON.parse(userValue));
       } else {
         setActiveUser(null);
-        setLoading(false);
       }
-    });
-  }, [activeUser]);
+      setLoading(false);
+    };
+    getUserData();
+  }, []);
+
+  console.log("active user", activeUser);
 
   // return loader component while loading
   if (loading || activeUser === undefined) return <Loader />;

@@ -4,6 +4,7 @@ import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { Loader } from "../components";
 import { styles } from "../styles/authStyle";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,6 +25,15 @@ const LoginScreen = ({ navigation }) => {
     if (data.status === false) {
       setErrorMessage(data.error);
     } else {
+      try {
+        const { user, token } = data;
+        const value = { fullName: user.fullName, email: user.email, token };
+        const userValue = JSON.stringify(value);
+        await AsyncStorage.setItem("instagramUser", userValue);
+      } catch (e) {
+        setErrorMessage("Can't store user in local storage");
+      }
+
       navigation.navigate("Main");
     }
     setLoading(false);
