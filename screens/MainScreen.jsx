@@ -19,6 +19,7 @@ import {
   selectActiveUser,
   GET_USERS,
   GET_USER_POSTS,
+  GET_POSTS,
 } from "../redux/slice/usersSlice";
 import { Loader } from "../components";
 
@@ -43,6 +44,18 @@ const MainScreen = () => {
           });
         });
         dispatch(GET_USERS(users));
+      });
+
+      // get all posts
+      onSnapshot(collection(db, "posts"), (snapshot) => {
+        let posts = [];
+        snapshot.forEach((doc) => {
+          posts.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        dispatch(GET_POSTS(posts));
       });
 
       // get user posts

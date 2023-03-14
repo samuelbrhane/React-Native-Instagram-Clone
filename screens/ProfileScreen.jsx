@@ -43,7 +43,6 @@ const ProfileScreen = ({ navigation }) => {
     ?.filter((user) => user?.data?.id !== activeUser?.id)
     ?.filter((user) => !user.data.followers.includes(activeUser.id));
 
-  console.log("unFollowedUsers", unFollowedUsers);
   // flat list render item
   const renderItem = ({ item }, index) => {
     return (

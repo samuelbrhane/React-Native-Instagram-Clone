@@ -4,6 +4,7 @@ const initialState = {
   activeUser: undefined,
   users: [],
   userPosts: [],
+  posts: [],
 };
 
 const usersSlice = createSlice({
@@ -18,6 +19,9 @@ const usersSlice = createSlice({
     },
     GET_USERS: (state, action) => {
       state.users = action.payload;
+    },
+    GET_POSTS: (state, action) => {
+      state.posts = action.payload;
     },
     GET_USER_POSTS: (state, action) => {
       state.userPosts = action.payload;
@@ -58,6 +62,7 @@ export const {
   ACTIVE_USER,
   LOGOUT_USER,
   GET_USERS,
+  GET_POSTS,
   GET_USER_POSTS,
   REMOVE_USER,
   FOLLOW_USER,
@@ -65,5 +70,6 @@ export const {
 export const selectActiveUser = (state) => state.users.activeUser;
 export const selectUsers = (state) => state.users.users;
 export const selectUserPosts = (state) => state.users.userPosts;
+export const selectPosts = (state) => state.users.posts;
 
 export default usersSlice.reducer;

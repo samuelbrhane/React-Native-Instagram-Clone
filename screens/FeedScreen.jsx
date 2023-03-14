@@ -8,10 +8,15 @@ import {
 } from "react-native";
 import React from "react";
 import { PostCard } from "../components";
-import { selectActiveUser, selectUsers } from "../redux/slice/usersSlice";
+import {
+  selectActiveUser,
+  selectPosts,
+  selectUsers,
+} from "../redux/slice/usersSlice";
 import { useSelector } from "react-redux";
 
 const FeedScreen = ({ navigation }) => {
+  const posts = useSelector(selectPosts);
   const activeUser = useSelector(selectActiveUser);
   const users = useSelector(selectUsers);
   const activeUserData = users?.find(
@@ -132,11 +137,12 @@ const FeedScreen = ({ navigation }) => {
 
         {/* Posts */}
         <View style={{ borderTopColor: "gray", borderTopWidth: 0.4 }}>
-          <PostCard navigation={navigation} />
-          <PostCard navigation={navigation} />
-          <PostCard navigation={navigation} />
-          <PostCard navigation={navigation} />
-          <PostCard navigation={navigation} />
+          {posts?.map((post) => {
+            const { id, data } = post;
+            return (
+              <PostCard navigation={navigation} id={id} data={data} key={id} />
+            );
+          })}
         </View>
       </ScrollView>
     </View>

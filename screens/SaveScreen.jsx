@@ -1,14 +1,17 @@
 import { Image, Text, View, TouchableOpacity, TextInput } from "react-native";
 import React, { useState } from "react";
-import { auth, db, storage } from "../firebase/config";
+import { db, storage } from "../firebase/config";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useSelector } from "react-redux";
+import { selectActiveUser } from "../redux/slice/usersSlice";
 
 const SaveScreen = (props) => {
-  const image = props.route.params.image;
-  const [caption, setCaptions] = useState("");
+  const activeUser = useSelector(selectActiveUser);
 
-  console.log("captions: " + caption);
+  const image = props.route.params.image;
+
+  const [caption, setCaptions] = useState("");
 
   const handleSave = async () => {
     const response = await fetch(image);
@@ -17,9 +20,7 @@ const SaveScreen = (props) => {
     // Upload images to firebase storage
     const storeImage = async (imageBlob) => {
       return new Promise((resolve, reject) => {
-        const filename = `${auth?.currentUser?.uid}-${Math.random().toString(
-          36
-        )}`;
+        const filename = `${activeUser?.id}-${Math.random().toString(36)}`;
         const storageRef = ref(storage, filename);
         const uploadTask = uploadBytesResumable(storageRef, imageBlob);
         uploadTask.on(
@@ -49,9 +50,11 @@ const SaveScreen = (props) => {
       const storeData = {
         caption,
         imageUrl,
+        fullName: activeUser.fullName,
         timestamp: serverTimestamp(),
-        creator: auth?.currentUser?.uid,
+        creator: activeUser?.id,
       };
+
       await addDoc(collection(db, "posts"), storeData);
       props.navigation.navigate("Main");
     });
@@ -60,7 +63,7 @@ const SaveScreen = (props) => {
   return (
     <View style={{ flex: 1, paddingTop: 10, paddingHorizontal: 5 }}>
       <Image
-        style={{ backgroundColor: "red", width: "100%", height: "85%" }}
+        style={{ backgroundColor: "#F65CD7", width: "100%", height: "85%" }}
         source={{
           uri: image,
         }}
@@ -83,13 +86,17 @@ const SaveScreen = (props) => {
       <TouchableOpacity
         onPress={handleSave}
         style={{
-          backgroundColor: "#FA879E",
+          backgroundColor: "#F65CD7",
           marginTop: 10,
           paddingVertical: 8,
           borderRadius: 5,
         }}
       >
-        <Text style={{ textAlign: "center", fontWeight: "bold" }}>Save</Text>
+        <Text
+          style={{ textAlign: "center", fontWeight: "bold", color: "white" }}
+        >
+          Save
+        </Text>
       </TouchableOpacity>
     </View>
   );
