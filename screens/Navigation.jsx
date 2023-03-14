@@ -83,7 +83,6 @@ const Navigation = () => {
           <Stack.Screen
             name="Comments"
             component={CommentScreen}
-            initialParams={{ data: "name" }}
             options={{ headerShadowVisible: false }}
           />
           <Stack.Screen

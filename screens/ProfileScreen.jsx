@@ -20,47 +20,47 @@ import {
 } from "firebase/firestore";
 import { UserInfo, UsersCard } from "../components";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ route: { params }, navigation }) => {
+  console.log("params: " + JSON.stringify(params));
   // get user posts
-  useEffect(() => {
-    if (auth?.currentUser) {
-      const q = query(
-        collection(db, "posts"),
-        where("creator", "==", auth.currentUser.uid),
-        orderBy("timestamp", "desc")
-      );
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const posts = [];
-        querySnapshot.forEach((doc) => {
-          posts.push({ data: doc.data(), id: doc.id });
-        });
+  // useEffect(() => {
+  //   if (auth?.currentUser) {
+  //     const q = query(
+  //       collection(db, "posts"),
+  //       where("creator", "==", auth.currentUser.uid),
+  //       orderBy("timestamp", "desc")
+  //     );
+  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //       const posts = [];
+  //       querySnapshot.forEach((doc) => {
+  //         posts.push({ data: doc.data(), id: doc.id });
+  //       });
 
-        setUserPosts(posts);
-      });
-    }
-  }, []);
+  //       setUserPosts(posts);
+  //     });
+  //   }
+  // }, []);
 
   // flat list render item
   const renderItem = ({ item }, index) => {
     return (
-      <View
-        key={index}
-        style={{
-          marginBottom: 1,
-          width: "33%",
-        }}
-      >
-        <Image
-          source={{
-            uri: item?.data?.imageUrl,
-          }}
-          style={{ height: 120, width: "100%" }}
-        />
-      </View>
+      <Text>check</Text>
+      // <View
+      //   key={index}
+      //   style={{
+      //     marginBottom: 1,
+      //     width: "33%",
+      //   }}
+      // >
+      //   <Image
+      //     source={{
+      //       uri: item?.data?.imageUrl,
+      //     }}
+      //     style={{ height: 120, width: "100%" }}
+      //   />
+      // </View>
     );
   };
-
-  console.log("users", users);
 
   return (
     <Text>check</Text>

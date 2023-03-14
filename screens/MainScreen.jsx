@@ -5,11 +5,23 @@ import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import FeedScreen from "./FeedScreen";
 import ProfileScreen from "./ProfileScreen";
 import EmptyScreen from "./EmptyScreen";
-import { auth, db } from "../firebase/config";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
-import { LOGOUT_USER } from "../redux/slice/usersSlice";
+import { db } from "../firebase/config";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectActiveUser,
+  GET_USERS,
+  GET_USER_POSTS,
+} from "../redux/slice/usersSlice";
+import { Loader } from "../components";
+
 const Tab = createMaterialBottomTabNavigator();
 
 {
@@ -26,83 +38,99 @@ const Tab = createMaterialBottomTabNavigator();
 
 const MainScreen = () => {
   const dispatch = useDispatch();
+  const activeUser = useSelector(selectActiveUser);
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
 
-  // get all users
+  // get data
   useEffect(() => {
-    const querySnapshot = onSnapshot(
-      getDocs(collection(db, "users")),
-      (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          console.log(doc.data());
+    setLoading(true);
+    // get users
+    onSnapshot(collection(db, "users"), (snapshot) => {
+      let users = [];
+      snapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          data: doc.data(),
         });
-      }
+      });
+      dispatch(GET_USERS(users));
+    });
+
+    // get user posts
+    const q = query(
+      collection(db, "posts"),
+      where("creator", "==", activeUser.id),
+      orderBy("timestamp", "desc")
     );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const posts = [];
+      querySnapshot.forEach((doc) => {
+        posts.push({ data: doc.data(), id: doc.id });
+      });
+
+      dispatch(GET_USER_POSTS(posts));
+    });
+
+    setLoading(false);
   }, []);
 
-  if (loading) return;
-  console.log("users", users);
+  if (loading) return <Loader />;
 
   return (
-    <View style={{ marginTop: 50 }}>
-      <Text>main</Text>
-    </View>
+    <Tab.Navigator
+      initialRouteName="Feed"
+      labeled={false}
+      activeColor="#232226"
+      inactiveColor="#F4EFF1"
+      barStyle={{
+        backgroundColor: "#F65CD7",
+        height: 50,
+        justifyContent: "center",
+      }}
+    >
+      {/* Feed Screen */}
+      <Tab.Screen
+        name="Feed"
+        component={FeedScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Entypo name="home" size={24} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
 
-    // <Tab.Navigator
-    //   initialRouteName="Feed"
-    //   labeled={false}
-    //   activeColor="#232226"
-    //   inactiveColor="#F4EFF1"
-    //   barStyle={{
-    //     backgroundColor: "#F65CD7",
-    //     height: 50,
-    //     justifyContent: "center",
-    //   }}
-    // >
-    //   {/* Feed Screen */}
-    //   <Tab.Screen
-    //     name="Feed"
-    //     component={FeedScreen}
-    //     options={{
-    //       tabBarIcon: ({ color }) => (
-    //         <Entypo name="home" size={24} color={color} />
-    //       ),
-    //       headerShown: false,
-    //     }}
-    //   />
+      {/* Add Post Screen */}
+      <Tab.Screen
+        name="AddPostContainer"
+        component={EmptyScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("AddPost");
+          },
+        })}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="post-add" size={24} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
 
-    //   {/* Add Post Screen */}
-    //   <Tab.Screen
-    //     name="AddPostContainer"
-    //     component={EmptyScreen}
-    //     listeners={({ navigation }) => ({
-    //       tabPress: (e) => {
-    //         e.preventDefault();
-    //         navigation.navigate("AddPost");
-    //       },
-    //     })}
-    //     options={{
-    //       tabBarIcon: ({ color }) => (
-    //         <MaterialIcons name="post-add" size={24} color={color} />
-    //       ),
-    //       headerShown: false,
-    //     }}
-    //   />
+      {/* Profile Screen */}
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="user-circle" size={24} color={color} />
+          ),
 
-    //   {/* Profile Screen */}
-    //   <Tab.Screen
-    //     name="Profile"
-    //     component={ProfileScreen}
-    //     options={{
-    //       tabBarIcon: ({ color }) => (
-    //         <FontAwesome5 name="user-circle" size={24} color={color} />
-    //       ),
-
-    //       headerShown: true,
-    //     }}
-    //   />
-    // </Tab.Navigator>
+          headerShown: true,
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 

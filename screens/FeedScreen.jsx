@@ -8,8 +8,13 @@ import {
 } from "react-native";
 import React from "react";
 import { PostCard } from "../components";
+import { selectActiveUser } from "../redux/slice/usersSlice";
+import { useSelector } from "react-redux";
 
-const FeedScreen = ({ navigation }) => {
+const FeedScreen = ({ navigation, route: { params } }) => {
+  const activeUser = useSelector(selectActiveUser);
+  console.log("params: " + JSON.stringify(params));
+
   return (
     <Text>text</Text>
     // <View style={{ flex: 1, marginTop: StatusBar.currentHeight }}>
@@ -49,7 +54,7 @@ const FeedScreen = ({ navigation }) => {
     //       horizontal={true}
     //       showsHorizontalScrollIndicator={false}
     //     >
-    //       {/* <View style={{ marginRight: 10, alignItems: "center" }}>
+    //       <View style={{ marginRight: 10, alignItems: "center" }}>
     //         {activeUser?.data.profilePicture ? (
     //           <Image
     //             source={{ uri: activeUser?.data.profilePicture }}
@@ -118,17 +123,17 @@ const FeedScreen = ({ navigation }) => {
     //             </View>
     //           );
     //         })}
-    //       </ScrollView> */}
+    //       </ScrollView>
     //     </ScrollView>
 
     //     {/* Posts */}
-    //     {/* <View style={{ borderTopColor: "gray", borderTopWidth: 0.4 }}>
+    //     <View style={{ borderTopColor: "gray", borderTopWidth: 0.4 }}>
     //       <PostCard navigation={navigation} />
     //       <PostCard navigation={navigation} />
     //       <PostCard navigation={navigation} />
     //       <PostCard navigation={navigation} />
     //       <PostCard navigation={navigation} />
-    //     </View> */}
+    //     </View>
     //   </ScrollView>
     // </View>
   );
