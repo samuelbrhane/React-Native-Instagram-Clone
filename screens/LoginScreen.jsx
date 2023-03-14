@@ -5,8 +5,11 @@ import { Loader } from "../components";
 import { styles } from "../styles/authStyle";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { ACTIVE_USER } from "../redux/slice/usersSlice";
 
 const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -25,16 +28,16 @@ const LoginScreen = ({ navigation }) => {
     if (data.status === false) {
       setErrorMessage(data.error);
     } else {
-      try {
-        const { user, token } = data;
-        const value = { fullName: user.fullName, email: user.email, token };
-        const userValue = JSON.stringify(value);
-        await AsyncStorage.setItem("instagramUser", userValue);
-      } catch (e) {
-        setErrorMessage("Can't store user in local storage");
-      }
-
-      navigation.navigate("Main");
+      const { user, token } = data;
+      const value = {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        token,
+      };
+      dispatch(ACTIVE_USER(value));
+      const userValue = JSON.stringify(value);
+      await AsyncStorage.setItem("instagramUser", userValue);
     }
     setLoading(false);
   };

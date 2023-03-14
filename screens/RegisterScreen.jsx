@@ -7,8 +7,11 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { styles } from "../styles/authStyle";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { ACTIVE_USER } from "../redux/slice/usersSlice";
 
 const RegisterScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -38,15 +41,17 @@ const RegisterScreen = ({ navigation }) => {
         following: [],
         timestamp: serverTimestamp(),
       });
-      try {
-        const { user, token } = data;
-        const value = { fullName: user.fullName, email: user.email, token };
-        const userValue = JSON.stringify(value);
-        await AsyncStorage.setItem("instagramUser", userValue);
-      } catch (e) {
-        setErrorMessage("Can't store user in local storage");
-      }
-      navigation.navigate("Main");
+
+      const { user, token } = data;
+      const value = {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        token,
+      };
+      const userValue = JSON.stringify(value);
+      dispatch(ACTIVE_USER(value));
+      await AsyncStorage.setItem("instagramUser", userValue);
     }
     setLoading(false);
   };

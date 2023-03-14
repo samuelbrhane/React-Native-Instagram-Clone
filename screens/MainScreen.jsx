@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
@@ -7,36 +7,48 @@ import ProfileScreen from "./ProfileScreen";
 import EmptyScreen from "./EmptyScreen";
 import { auth, db } from "../firebase/config";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { LOGOUT_USER } from "../redux/slice/usersSlice";
 const Tab = createMaterialBottomTabNavigator();
 
+{
+  /* <TouchableOpacity
+      style={{ marginTop: 100, backgroundColor: "blue" }}
+      onPress={async () => {
+        await AsyncStorage.removeItem("instagramUser");
+        dispatch(LOGOUT_USER());
+      }}
+    >
+      <Text>LOGOUT</Text>
+    </TouchableOpacity> */
+}
+
 const MainScreen = () => {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
 
   // get all users
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const unsubscribe = onSnapshot(
-  //       getDocs(collection(db, "users")),
-  //       (querySnapshot) => {
-  //         const users = [];
-  //         querySnapshot.forEach((doc) => {
-  //           users.push({ data: doc.data(), id: doc.id });
-  //         });
+  useEffect(() => {
+    const querySnapshot = onSnapshot(
+      getDocs(collection(db, "users")),
+      (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          console.log(doc.data());
+        });
+      }
+    );
+  }, []);
 
-  //         setUsers(users);
-  //         setLoading(false);
-  //       }
-  //     );
-  //   };
-  //   fetchData();
-  // }, []);
-
-  // if (loading) return;
-  // console.log("users", users);
+  if (loading) return;
+  console.log("users", users);
 
   return (
-    <Text>Main</Text>
+    <View style={{ marginTop: 50 }}>
+      <Text>main</Text>
+    </View>
+
     // <Tab.Navigator
     //   initialRouteName="Feed"
     //   labeled={false}
