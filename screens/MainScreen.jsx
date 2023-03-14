@@ -24,18 +24,6 @@ import { Loader } from "../components";
 
 const Tab = createMaterialBottomTabNavigator();
 
-{
-  /* <TouchableOpacity
-      style={{ marginTop: 100, backgroundColor: "blue" }}
-      onPress={async () => {
-        await AsyncStorage.removeItem("instagramUser");
-        dispatch(LOGOUT_USER());
-      }}
-    >
-      <Text>LOGOUT</Text>
-    </TouchableOpacity> */
-}
-
 const MainScreen = () => {
   const dispatch = useDispatch();
   const activeUser = useSelector(selectActiveUser);
@@ -45,31 +33,33 @@ const MainScreen = () => {
   useEffect(() => {
     setLoading(true);
     // get users
-    onSnapshot(collection(db, "users"), (snapshot) => {
-      let users = [];
-      snapshot.forEach((doc) => {
-        users.push({
-          id: doc.id,
-          data: doc.data(),
+    if (activeUser) {
+      onSnapshot(collection(db, "users"), (snapshot) => {
+        let users = [];
+        snapshot.forEach((doc) => {
+          users.push({
+            id: doc.id,
+            data: doc.data(),
+          });
         });
-      });
-      dispatch(GET_USERS(users));
-    });
-
-    // get user posts
-    const q = query(
-      collection(db, "posts"),
-      where("creator", "==", activeUser.id),
-      orderBy("timestamp", "desc")
-    );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const posts = [];
-      querySnapshot.forEach((doc) => {
-        posts.push({ data: doc.data(), id: doc.id });
+        dispatch(GET_USERS(users));
       });
 
-      dispatch(GET_USER_POSTS(posts));
-    });
+      // get user posts
+      const q = query(
+        collection(db, "posts"),
+        where("creator", "==", activeUser.id),
+        orderBy("timestamp", "desc")
+      );
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+          posts.push({ data: doc.data(), id: doc.id });
+        });
+
+        dispatch(GET_USER_POSTS(posts));
+      });
+    }
 
     setLoading(false);
   }, []);

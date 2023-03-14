@@ -35,6 +35,7 @@ const RegisterScreen = ({ navigation }) => {
       setErrorMessage(data.error);
     } else {
       await setDoc(doc(db, "users", data.user._id), {
+        id: data.user._id,
         fullName: name,
         email,
         followers: [],
