@@ -66,9 +66,6 @@ const PostCard = ({ navigation, id, data }) => {
     setCommentText("");
   };
 
-  console.log("data", data);
-  console.log("id", id);
-
   const caption = data?.caption;
   return (
     <View

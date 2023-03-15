@@ -1,12 +1,59 @@
 import { Image, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EvilIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { selectUsers } from "../redux/slice/usersSlice";
+import { selectActiveUser, selectUsers } from "../redux/slice/usersSlice";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../firebase/config";
 
-const CommentCard = ({ data, id }) => {
+const CommentCard = ({ data, id, postId }) => {
   const users = useSelector(selectUsers);
+  const activeUser = useSelector(selectActiveUser);
+  const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [userLiked, setUserLiked] = useState(false);
   const commentCreator = users.find((user) => user.data.id === data.userId);
+
+  useEffect(() => {
+    onSnapshot(
+      collection(db, "posts", postId, "comment", id, "likes"),
+      (snapshot) => setLikes(snapshot.docs)
+    );
+
+    onSnapshot(collection(db, "posts", id, "comment"), (snapshot) => {
+      setComments(snapshot.docs);
+    });
+  }, [id]);
+
+  // find user id in post likes
+  useEffect(() => {
+    setUserLiked(likes.findIndex((like) => like.id === activeUser.id) !== -1);
+  }, [likes, activeUser.id]);
+
+  console.log("comments", comments);
+
+  const handleLike = async () => {
+    // remove user id if already liked
+    if (userLiked) {
+      await deleteDoc(
+        doc(db, "posts", postId, "comment", id, "likes", activeUser.id)
+      );
+    } else {
+      // add user if to like array
+      await setDoc(
+        doc(db, "posts", postId, "comment", id, "likes", activeUser.id),
+        {
+          username: activeUser?.fullName,
+        }
+      );
+    }
+  };
 
   return (
     <View
@@ -50,19 +97,19 @@ const CommentCard = ({ data, id }) => {
             <TouchableOpacity>
               <Text style={{ color: "gray" }}>Reply</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={{ color: "gray" }}>
-                ----------- View all 28 replies
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
 
       {/* comment likes */}
       <View>
-        <EvilIcons name="heart" size={28} color="black" />
-        <Text>211</Text>
+        <EvilIcons
+          name="heart"
+          size={28}
+          color={userLiked ? "#F34FDA" : "black"}
+          onPress={handleLike}
+        />
+        <Text style={{ textAlign: "center" }}>{likes.length}</Text>
       </View>
     </View>
   );

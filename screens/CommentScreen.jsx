@@ -8,18 +8,21 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { CommentCard, Loader } from "../components";
-import { collection, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useSelector } from "react-redux";
-import { selectUsers } from "../redux/slice/usersSlice";
+import { selectActiveUser, selectUsers } from "../redux/slice/usersSlice";
 import Moment from "react-moment";
 
 const CommentScreen = ({ route: { params } }) => {
   const { data, id } = params;
+  const postId = id;
   const users = useSelector(selectUsers);
+  const activeUser = useSelector(selectActiveUser);
   const postCreator = users.find((user) => user.data.id === data.creator);
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
 
   // fetch post comments
   useEffect(() => {
@@ -35,6 +38,14 @@ const CommentScreen = ({ route: { params } }) => {
       setLoading(false);
     });
   }, []);
+
+  const handleComment = async () => {
+    await addDoc(collection(db, "posts", id, "comment"), {
+      commentText,
+      userId: activeUser.id,
+    });
+    setCommentText("");
+  };
 
   if (loading) return <Loader />;
 
@@ -80,7 +91,7 @@ const CommentScreen = ({ route: { params } }) => {
         {/* Comments */}
         {comments.map((comment) => {
           const { data, id } = comment;
-          return <CommentCard key={id} data={data} id={id} />;
+          return <CommentCard key={id} data={data} id={id} postId={postId} />;
         })}
       </ScrollView>
       <View
@@ -96,10 +107,17 @@ const CommentScreen = ({ route: { params } }) => {
           source={require("../assets/profile.jpg")}
           style={{ width: 22, height: 22, borderRadius: 22 }}
         />
-        <TextInput style={{ width: "80%" }} placeholder="Add a comment..." />
-        <TouchableOpacity>
-          <Text style={{ color: "#F34FDA" }}>Post</Text>
-        </TouchableOpacity>
+        <TextInput
+          style={{ width: "80%" }}
+          placeholder="Add a comment..."
+          value={commentText}
+          onChangeText={(value) => setCommentText(value)}
+        />
+        {commentText.length > 0 && (
+          <TouchableOpacity onPress={handleComment}>
+            <Text style={{ color: "#F34FDA" }}>Post</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
