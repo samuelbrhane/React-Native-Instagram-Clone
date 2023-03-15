@@ -9,6 +9,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { ACTIVE_USER } from "../redux/slice/usersSlice";
+import { BACKEND_URL } from "@env";
 
 const RegisterScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleRegister = async () => {
     setLoading(true);
     const { name, email, password } = inputData;
-    const { data } = await axios.post("http://10.0.2.2:8000/register", {
+    const { data } = await axios.post(`${BACKEND_URL}/register`, {
       fullName: name,
       email,
       password,

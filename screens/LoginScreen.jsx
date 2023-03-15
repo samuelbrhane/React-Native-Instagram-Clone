@@ -7,6 +7,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { ACTIVE_USER } from "../redux/slice/usersSlice";
+import { BACKEND_URL } from "@env";
 
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     setLoading(true);
     const { email, password } = inputData;
-    const { data } = await axios.post("http://10.0.2.2:8000/login", {
+    const { data } = await axios.post(`${BACKEND_URL}/login`, {
       email,
       password,
     });
