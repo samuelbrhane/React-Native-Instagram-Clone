@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "instagram-clone",
+    "name": "Instagram Clone",
+    "description": "Instagram Clone",
     "slug": "instagram-clone",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/instagram-icon.jpg",
     "userInterfaceStyle": "light",
     "plugins": [
       [
@@ -15,7 +16,7 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/instagram.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
