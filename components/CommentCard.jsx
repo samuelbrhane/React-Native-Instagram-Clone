@@ -16,7 +16,7 @@ const CommentCard = ({ data, id, postId }) => {
   const users = useSelector(selectUsers);
   const activeUser = useSelector(selectActiveUser);
   const [likes, setLikes] = useState([]);
-  const [comments, setComments] = useState([]);
+
   const [userLiked, setUserLiked] = useState(false);
   const commentCreator = users.find((user) => user.data.id === data.userId);
 
@@ -25,18 +25,12 @@ const CommentCard = ({ data, id, postId }) => {
       collection(db, "posts", postId, "comment", id, "likes"),
       (snapshot) => setLikes(snapshot.docs)
     );
-
-    onSnapshot(collection(db, "posts", id, "comment"), (snapshot) => {
-      setComments(snapshot.docs);
-    });
   }, [id]);
 
-  // find user id in post likes
+  // find user id in comment likes
   useEffect(() => {
     setUserLiked(likes.findIndex((like) => like.id === activeUser.id) !== -1);
   }, [likes, activeUser.id]);
-
-  console.log("comments", comments);
 
   const handleLike = async () => {
     // remove user id if already liked

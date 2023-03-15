@@ -23,7 +23,7 @@ import { db } from "../firebase/config";
 const PostCard = ({ navigation, id, data }) => {
   const activeUser = useSelector(selectActiveUser);
   const users = useSelector(selectUsers);
-  const postCreator = users.find((user) => user.data.id === data.creator);
+  const postCreator = users.find((user) => user?.data.id === data?.creator);
   const [fullText, setFullText] = useState(false);
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
@@ -43,8 +43,8 @@ const PostCard = ({ navigation, id, data }) => {
 
   // find user id in post likes
   useEffect(() => {
-    setUserLiked(likes.findIndex((like) => like.id === activeUser.id) !== -1);
-  }, [likes, activeUser.id]);
+    setUserLiked(likes.findIndex((like) => like.id === activeUser?.id) !== -1);
+  }, [likes, activeUser?.id]);
 
   const handleLike = async () => {
     // remove user id if already liked
@@ -52,7 +52,7 @@ const PostCard = ({ navigation, id, data }) => {
       await deleteDoc(doc(db, "posts", id, "likes", activeUser?.id));
     } else {
       // add user if to like array
-      await setDoc(doc(db, "posts", id, "likes", activeUser.id), {
+      await setDoc(doc(db, "posts", id, "likes", activeUser?.id), {
         username: activeUser?.fullName,
       });
     }
@@ -61,7 +61,7 @@ const PostCard = ({ navigation, id, data }) => {
   const handleComment = async () => {
     await addDoc(collection(db, "posts", id, "comment"), {
       commentText,
-      userId: activeUser.id,
+      userId: activeUser?.id,
     });
     setCommentText("");
   };

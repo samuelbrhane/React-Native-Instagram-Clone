@@ -8,16 +8,8 @@ import {
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { auth, db } from "../firebase/config";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { db } from "../firebase/config";
+import { doc, updateDoc } from "firebase/firestore";
 import { UserInfo, UsersCard } from "../components";
 import {
   LOGOUT_USER,
@@ -63,20 +55,18 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
-  // <TouchableOpacity
-  //   style={{ marginTop: 100, backgroundColor: "blue" }}
-  //   onPress={async () => {
-  //     await AsyncStorage.removeItem("instagramUser");
-  //     dispatch(LOGOUT_USER());
-  //   }}
-  // >
-  //   <Text>LOGOUT</Text>
-  // </TouchableOpacity>
+  // logout user
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("instagramUser");
+    dispatch(LOGOUT_USER());
+  };
 
+  // remove user from discover people
   const removeUser = (id) => {
     dispatch(REMOVE_USER(id));
   };
 
+  // follow user
   const followUser = async (id) => {
     const followedUser = users.find((user) => user?.data?.id === id);
     dispatch(FOLLOW_USER(id));
@@ -146,9 +136,10 @@ const ProfileScreen = ({ navigation }) => {
                     borderRadius: 5,
                     paddingVertical: 5,
                   }}
+                  onPress={handleLogout}
                 >
                   <Text style={{ textAlign: "center", fontWeight: "semibold" }}>
-                    Share Profile
+                    Logout
                   </Text>
                 </TouchableOpacity>
               </View>
