@@ -129,11 +129,6 @@ const RegisterScreen = ({ navigation }) => {
           <TouchableOpacity onPress={handleRegister}>
             <Text style={styles.register}>Register</Text>
           </TouchableOpacity>
-
-          {/* Google Login */}
-          {/* <TouchableOpacity onPress={handleGoogle}>
-            <Text style={styles.google}>Continue With Google</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
 

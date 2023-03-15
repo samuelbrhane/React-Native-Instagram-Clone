@@ -103,12 +103,6 @@ const LoginScreen = ({ navigation }) => {
           <TouchableOpacity onPress={handleLogin}>
             <Text style={styles.register}>Login</Text>
           </TouchableOpacity>
-
-          {/* Google Login */}
-          {/* Login */}
-          {/* <TouchableOpacity onPress={handleGoogle}>
-            <Text style={styles.google}>Continue With Google</Text>
-          </TouchableOpacity> */}
         </View>
       </View>
 

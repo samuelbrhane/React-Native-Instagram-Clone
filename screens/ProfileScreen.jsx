@@ -33,7 +33,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const unFollowedUsers = users
     ?.filter((user) => user?.data?.id !== activeUser?.id)
-    ?.filter((user) => !user.data.followers.includes(activeUser.id));
+    ?.filter((user) => !user?.data.followers.includes(activeUser?.id));
 
   // flat list render item
   const renderItem = ({ item }, index) => {
@@ -72,10 +72,10 @@ const ProfileScreen = ({ navigation }) => {
     dispatch(FOLLOW_USER(id));
     dispatch(REMOVE_USER(id));
     await updateDoc(doc(db, "users", id), {
-      followers: [...followedUser?.data?.followers, activeUser.id],
+      followers: [...followedUser?.data?.followers, activeUser?.id],
     });
 
-    await updateDoc(doc(db, "users", activeUser.id), {
+    await updateDoc(doc(db, "users", activeUser?.id), {
       following: [...activeUserData?.data?.following, id],
     });
   };
@@ -185,7 +185,7 @@ const ProfileScreen = ({ navigation }) => {
           </>
         }
         data={userPosts}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item?.id}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         numColumns={3}
         horizontal={false}
